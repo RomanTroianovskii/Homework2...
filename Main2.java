@@ -2,22 +2,46 @@
 
 public class Main2 {
     public static void main(String[] args) {
+
+        // Создаём объекты типа Product
         Product first = new Product("carrot", 1.5, 2);
         Product second = new Product("potato", 3, 3);
         Product third = new Product("egg", 2, 4);
+
+
+        ShoppingCart cart0 = new ShoppingCart();
+        cart0.addProduct(first);
+        cart0.addProduct(second);
+        cart0.addProduct(third);
+
+        System.out.println(cart0.calculateTotal()); //Просто провека без изменений продуктов и т.д (1.5 * 2 + 3 * 3 + 4 * 2 = 20) (out: 20.0)
 
         first.setPrice(1);
         second.setName("potato_new");
         third.setQuantity(2);
 
-        ShoppingCart cart = new ShoppingCart();
+        ShoppingCart cart1 = new ShoppingCart();
 
-        cart.addProduct(first);
-        cart.addProduct(second);
-        cart.addProduct(third);
+        cart1.addProduct(first); //Проверка метода addProduct
+        cart1.addProduct(second);
+        cart1.addProduct(third);
 
-        cart.removeProduct(second);
-        System.out.println(cart.calculateTotal());
+        cart1.removeProduct(second);  // Проверка метода removeProduct
+        System.out.println(cart1.calculateTotal()); // Проверка результата - (1.0 * 2.0 + 2.0 * 2.0 = 6.0) (out: 6.0)
+        System.out.println(cart1.calculateTotal()); // Проверка обнуления (out: 0.0)
+
+        ShoppingCart cart2 = new ShoppingCart(); //Проверка пустого ShoppingCart
+        System.out.println(cart2.calculateTotal()); // Пустой ShoppingCart (out 0.0)
+
+        ShoppingCart cart3 = new ShoppingCart();
+
+        cart3.addProduct(first); //Проверка добавления двух одинаовых компонентов
+        cart3.addProduct(first);
+
+        cart3.removeProduct(new Product("carrot", 1, 2)); //1. Должен вызвать Exception из-за различия ссылок
+        cart3.removeProduct(first);  //Должен удалить ТОЛЬКО 1 first
+        System.out.println(cart3.calculateTotal()); // Проверка результата - (1.0 * 2.0 = 2.0) (out: 2.0)
+
     }
 }
 class Product {
@@ -50,24 +74,25 @@ class Product {
         this.price = price;
     }
 
-    public int getQuantity()
-    {
+    public int getQuantity() {
         return this.quantity;
     }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public double getAllPrice()
-    {
-        return getPrice()*getQuantity();
+    public double getAllPrice() {
+        return getPrice() * getQuantity();
     }
+
     //#endregion
+
 }
 
 class ShoppingCart
 {
-    private DynamicArray<Product> list = new DynamicArray<Product>();
+    private final DynamicArray<Product> list = new DynamicArray<Product>(1024);
     public void addProduct(Product product)
     {
         list.add(product);
@@ -148,7 +173,7 @@ class DynamicArray<E>
         boolean isExistItemToDelete = false;
         for (int i = 0; i < currentLength; i++)
         {
-            if(items[i] == item)
+            if( items[i].equals(item))
             {
                 itemToDeleteIndex = i;
                 isExistItemToDelete = true;
@@ -156,7 +181,7 @@ class DynamicArray<E>
         }
         if(!isExistItemToDelete)
         {
-            throw new Exception("item is not exist! At method DynamicArray<E>.delete(E item)");
+            throw new Exception("item is not exist! At method DynamicArray<E>.delete(E item), Line: 184");
         }
         else
         {
@@ -171,6 +196,7 @@ class DynamicArray<E>
         for(int i = 0; i <  currentLength; i++) {
             items[i] = temp[i];
         }
+        System.out.println("1");
     }
 
     public void zeroAll()
