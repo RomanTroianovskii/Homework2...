@@ -33,7 +33,7 @@ public class Main2 {
         ShoppingCart cart2 = new ShoppingCart(); //Проверка пустого ShoppingCart
         System.out.println(cart2.calculateTotal()); // Пустой ShoppingCart (out 0.0)
 
-        ShoppingCart cart3 = new ShoppingCart();
+        //ShoppingCart cart3 = new ShoppingCart();
 
         cart3.addProduct(first); //Проверка добавления двух одинаовых компонентов
         cart3.addProduct(first);
