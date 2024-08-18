@@ -33,7 +33,7 @@ public class Main2 {
         ShoppingCart cart2 = new ShoppingCart(); //Проверка пустого ShoppingCart
         System.out.println(cart2.calculateTotal()); // Пустой ShoppingCart (out 0.0)
 
-        //ShoppingCart cart3 = new ShoppingCart();
+        ShoppingCart cart3 = new ShoppingCart();
 
         cart3.addProduct(first); //Проверка добавления двух одинаовых компонентов
         cart3.addProduct(first);
@@ -92,10 +92,17 @@ class Product {
 
 class ShoppingCart
 {
-    private final DynamicArray<Product> list = new DynamicArray<Product>(1024);
+    private final DynamicArray<Product> list = new DynamicArray<Product>(DynamicArray.INFINITY_LENGTH);
     public void addProduct(Product product)
     {
-        list.add(product);
+        try {
+            list.add(product);
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     public void removeProduct(Product product)
@@ -124,6 +131,7 @@ class ShoppingCart
 
 class DynamicArray<E>
 {
+    public static int INFINITY_LENGTH = -1;
     private int maxLength = 256;
     private  int currentLength = 0;
     private  int currentIndexToAdd = 0;
@@ -137,7 +145,15 @@ class DynamicArray<E>
 
     public DynamicArray(int maxLength, E firstItem) {
         this.maxLength = maxLength;
-        add(firstItem);
+        try
+        {
+            add(firstItem);
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     public DynamicArray(){};
@@ -155,8 +171,14 @@ class DynamicArray<E>
         this.maxLength = maxLength;
     }
 
-    public void add(E item)
+    public void add(E item) throws Exception {
+    if(maxLength != INFINITY_LENGTH)
     {
+        if(currentLength > maxLength)
+        {
+            throw new Exception("There is no place for the element in the array!");
+        }
+    }
         temp = new Object[currentLength];
         temp = items;
         items = new Object[++currentLength];
@@ -181,7 +203,7 @@ class DynamicArray<E>
         }
         if(!isExistItemToDelete)
         {
-            throw new Exception("item is not exist! At method DynamicArray<E>.delete(E item), Line: 184");
+            throw new Exception("item is not exist! At method DynamicArray<E>.delete(E item)");
         }
         else
         {
